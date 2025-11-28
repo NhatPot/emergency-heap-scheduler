@@ -1,5 +1,11 @@
 # Hệ thống xếp lịch bệnh nhân cấp cứu (Heap Scheduler)
 
+## Tác giả
+
+- Lê Minh Nhật
+- Nguyễn Tuấn Nguyễn
+- Nguyễn Đức Tín
+
 Ứng dụng mô phỏng phòng cấp cứu dựa trên **Max-Heap Priority Queue**. Mỗi node.patient chứa:
 
 | Thuộc tính | Ý nghĩa |
@@ -54,8 +60,3 @@ requirements.txt      # Phụ thuộc (Flask)
 ```
 
 
-## Tác giả
-
-- Lê Minh Nhật
-- Nguyễn Tuấn Nguyễn
-- Nguyễn Đức Tín

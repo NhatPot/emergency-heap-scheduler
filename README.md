@@ -53,11 +53,6 @@ static/app.js         # Logic front-end, minh hoạ thuật toán
 requirements.txt      # Phụ thuộc (Flask)
 ```
 
-## Gợi ý thuyết trình
-
-- Minh hoạ thao tác insert/extract qua tab “Các bước thuật toán” và “Minh hoạ dạng cây”.
-- Sử dụng tab “Thống kê” để cho thấy tác dụng của hàng đợi ưu tiên khi dữ liệu thay đổi.
-- Nhấn mạnh độ phức tạp: Insert/Extract `O(log n)` nhờ cấu trúc Heap.
 
 ## Tác giả
 

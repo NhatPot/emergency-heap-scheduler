@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hệ thống xếp lịch bệnh nhân cấp cứu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <div class="page">
+      <div class="dashboard">
+        <aside class="sidebar">
+          <div class="sidebar-header">
+            <h2>Heap Dashboard</h2>
+            <p>Emergency Priority Queue</p>
+          </div>
+          <nav class="tab-nav">
+            <button class="tab-button active" data-tab="tab-overview">📌 Tổng quan</button>
+            <button class="tab-button" data-tab="tab-add">➕ Thêm bệnh nhân</button>
+            <button class="tab-button" data-tab="tab-queue">📋 Danh sách ưu tiên</button>
+            <button class="tab-button" data-tab="tab-stats">📊 Thống kê</button>
+            <button class="tab-button" data-tab="tab-heap">🧠 Minh hoạ Heap</button>
+            <button class="tab-button" data-tab="tab-heap-array">🧱 Dạng mảng</button>
+            <button class="tab-button" data-tab="tab-heap-tree">🌲 Dạng cây</button>
+            <button class="tab-button" data-tab="tab-heap-steps">⚙️ Các bước</button>
+            <button class="tab-button" data-tab="tab-log">📣 Log sự kiện</button>
+            <button class="tab-button" data-tab="tab-theory">📖 Lý thuyết</button>
+          </nav>
+        </aside>
+
+        <div class="tab-content">
+          <section id="tab-overview" class="tab-section">
+            <header class="hero">
+              <div class="hero-text">
+                <p class="eyebrow">Giải thuật - Priority Queue bằng Max-Heap</p>
+                <h1>Hệ thống xếp lịch bệnh nhân cấp cứu</h1>
+                <p>
+                  Dashboard giúp mô phỏng cách Heap ưu tiên bệnh nhân dựa trên mức độ nguy kịch
+                  và thời điểm nhập viện. Mỗi tab tương ứng với một phần của bài thuyết trình để bạn
+                  dễ điều hướng khi demo.
+                </p>
+              </div>
+              <div class="hero-actions">
+                <label class="seed-control">
+                  <span>Số lượng demo</span>
+                  <select id="demoCount">
+                    <option value="5" selected>5 bệnh nhân</option>
+                    <option value="10">10 bệnh nhân</option>
+                  </select>
+                </label>
+                <button id="demoBtn">Sinh bệnh nhân demo</button>
+                <button id="resetBtn" class="outline">Reset hệ thống</button>
+              </div>
+            </header>
+            <div class="summary-grid" id="overviewSummary"></div>
+          </section>
+
+          <section id="tab-add" class="tab-section hidden">
+            <article class="card">
+              <div class="card-header">
+                <h2>Thêm bệnh nhân</h2>
+                <p>Form kiểm tra đầy đủ giá trị và giải thích mapping mức độ nguy kịch.</p>
+              </div>
+              <form id="patientForm" class="form-grid">
+                <label>
+                  Mã bệnh nhân
+                  <input name="code" maxlength="10" required placeholder="VD: BN01" />
+                </label>
+                <label>
+                  Họ tên
+                  <input name="name" required placeholder="VD: Nguyễn Văn A" />
+                </label>
+                <label>
+                  Thời điểm nhập viện
+                  <input type="datetime-local" name="admittedAt" required />
+                </label>
+                <label>
+                  Mức độ nguy kịch (1-10)
+                  <input type="number" name="severity" min="1" max="10" required />
+                </label>
+                <button type="submit" class="primary">Thêm vào hàng đợi</button>
+              </form>
+
+              <div class="legend" id="severityLegend"></div>
+            </article>
+          </section>
+
+          <section id="tab-queue" class="tab-section hidden">
+            <article class="card queue-card">
+              <div class="card-header">
+                <div>
+                  <h2>Danh sách ưu tiên</h2>
+                  <p>Sort theo mức độ + thời điểm nhập viện.</p>
+                </div>
+                <div class="queue-actions">
+                  <input type="search" id="filterInput" placeholder="Lọc theo tên hoặc mã..." />
+                  <select id="severityFilter">
+                    <option value="all">Tất cả mức độ</option>
+                    <option value="Nguy kịch">Nguy kịch</option>
+                    <option value="Nguy hiểm cao">Nguy hiểm cao</option>
+                    <option value="Trung bình">Trung bình</option>
+                    <option value="Nhẹ">Nhẹ</option>
+                    <option value="Rất nhẹ">Rất nhẹ</option>
+                  </select>
+                  <button id="processBtn" class="primary">Xử lý khẩn cấp nhất</button>
+                </div>
+              </div>
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Mã</th>
+                      <th>Tên</th>
+                      <th>Nhập viện</th>
+                      <th>Level</th>
+                      <th>Nhóm</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody id="queueTableBody"></tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+
+          <section id="tab-stats" class="tab-section hidden">
+            <article class="card stats-card">
+              <div class="card-header">
+                <h2>Thống kê</h2>
+                <p>Theo dõi số lượng bệnh nhân theo từng mức.</p>
+              </div>
+              <div class="stats" id="statsPanel"></div>
+            </article>
+
+            <article class="card chart-wrapper">
+              <div class="card-header">
+                <h2>Biểu đồ thống kê bệnh nhân</h2>
+                <p>Phân bố mức độ nguy kịch theo dữ liệu hiện tại trong Heap.</p>
+              </div>
+              <div class="charts-grid">
+                <div class="chart-card">
+                  <h3>Biểu đồ cột</h3>
+                  <canvas id="statsBarChart" width="400" height="280"></canvas>
+                </div>
+                <div class="chart-card">
+                  <h3>Biểu đồ donut</h3>
+                  <canvas id="statsDonutChart" width="400" height="280"></canvas>
+                </div>
+              </div>
+            </article>
+          </section>
+
+          <section id="tab-heap" class="tab-section hidden">
+            <article class="card">
+              <div class="card-header">
+                <h2>Minh hoạ Heap</h2>
+                <p>Giải thích nhanh cách sử dụng hai tab minh hoạ bên dưới.</p>
+              </div>
+              <div class="theory-content">
+                <p>
+                  Mỗi thao tác insert / extract sẽ cập nhật cả mảng Heap (0-based) và cây nhị phân hoàn chỉnh.
+                  Dùng tab "Dạng mảng" để lý giải cách Heap lưu trong bộ nhớ, và tab "Dạng cây" để trình bày trực quan cha - con.
+                </p>
+                <p>
+                  Tab "Các bước" cho thấy log sift-up hoặc sift-down tương ứng. Bạn có thể chuyển giữa các tab này trong khi thao tác để nhấn mạnh từng khía cạnh.
+                </p>
+              </div>
+            </article>
+          </section>
+
+          <section id="tab-heap-array" class="tab-section hidden">
+            <article class="card">
+              <div class="card-header">
+                <h2>Minh hoạ dạng mảng</h2>
+                <p>Hiển thị cấu trúc Heap theo dạng array (0-based index).</p>
+              </div>
+              <div id="arrayView" class="array-view"></div>
+            </article>
+          </section>
+
+          <section id="tab-heap-tree" class="tab-section hidden">
+            <article class="card">
+              <div class="card-header">
+                <h2>Minh hoạ dạng cây</h2>
+                <p>Phân tầng cha - con; step highlight thể hiện node đang xét.</p>
+              </div>
+              <div id="treeView" class="tree-view"></div>
+            </article>
+          </section>
+
+          <section id="tab-heap-steps" class="tab-section hidden">
+            <article class="card steps-card">
+              <div class="card-header">
+                <h2>Các bước thuật toán</h2>
+                <p>Giải thích sift-up / sift-down của thao tác gần nhất.</p>
+              </div>
+              <ol id="stepsList" class="steps-list"></ol>
+            </article>
+          </section>
+
+          <section id="tab-log" class="tab-section hidden">
+            <article class="card log-card">
+              <div class="card-header">
+                <div>
+                  <h2>Thông báo / Log</h2>
+                  <p>Ghi lại thao tác ưu tiên gần nhất.</p>
+                </div>
+                <button id="clearLogBtn" class="outline">Xoá log</button>
+              </div>
+              <ul id="logPanel" class="log-panel"></ul>
+            </article>
+          </section>
+
+          <section id="tab-theory" class="tab-section hidden">
+            <article class="card theory-card">
+              <div class="card-header">
+                <h2>Giới thiệu thuật toán Heap</h2>
+              </div>
+              <div class="theory-content">
+                <p>
+                  Heap (đặc biệt là Max-Heap) là cấu trúc cây nhị phân hoàn chỉnh trong đó mỗi node luôn lớn hơn hoặc bằng các node con.
+                  Nhờ tính chất này, thao tác lấy phần tử có priority cao nhất chỉ cần O(1), còn thêm / loại bỏ mất O(log n) nhờ sift-up hoặc sift-down.
+                </p>
+                <p>
+                  Trong bối cảnh cấp cứu, bệnh nhân có mức độ nguy kịch cao (Level gần 10) phải được phục vụ trước.
+                  Nếu mức độ bằng nhau, người đến sớm hơn được ưu tiên hơn. Vì vậy Heap phù hợp để mô phỏng phòng cấp cứu.
+                </p>
+                <ul>
+                  <li>Insert: thêm node ở cuối mảng rồi sift-up.</li>
+                  <li>Extract-max: lấy node gốc, đưa node cuối lên gốc và sift-down.</li>
+                  <li>Priority queue: bảng bên phải luôn hiển thị thứ tự xử lý chính xác.</li>
+                </ul>
+              </div>
+            </article>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="patientModal">
+      <div class="modal-content">
+        <button class="close" data-close>&times;</button>
+        <h3>Thông tin bệnh nhân</h3>
+        <dl id="modalDetails"></dl>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" role="status"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
+

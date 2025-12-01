@@ -19,12 +19,9 @@
             <button class="tab-button" data-tab="tab-add">➕ Thêm bệnh nhân</button>
             <button class="tab-button" data-tab="tab-queue">📋 Danh sách ưu tiên</button>
             <button class="tab-button" data-tab="tab-stats">📊 Thống kê</button>
-            <button class="tab-button" data-tab="tab-heap">🧠 Minh hoạ Heap</button>
-            <button class="tab-button" data-tab="tab-heap-array">🧱 Dạng mảng</button>
-            <button class="tab-button" data-tab="tab-heap-tree">🌲 Dạng cây</button>
-            <button class="tab-button" data-tab="tab-heap-steps">⚙️ Các bước</button>
+            <button class="tab-button" data-tab="tab-heap">🧠 Tổng hợp minh hoạ Heap</button>
             <button class="tab-button" data-tab="tab-log">📣 Log sự kiện</button>
-            <button class="tab-button" data-tab="tab-theory">📖 Lý thuyết</button>
+            <button class="tab-button" data-tab="tab-algorithm">📝 Giải thuật chi tiết</button>
           </nav>
         </aside>
 
@@ -153,48 +150,73 @@
           <section id="tab-heap" class="tab-section hidden">
             <article class="card">
               <div class="card-header">
-                <h2>Minh hoạ Heap</h2>
-                <p>Giải thích nhanh cách sử dụng hai tab minh hoạ bên dưới.</p>
+                <h2>Tổng hợp minh hoạ Heap trong bài toán cấp cứu</h2>
               </div>
               <div class="theory-content">
                 <p>
-                  Mỗi thao tác insert / extract sẽ cập nhật cả mảng Heap (0-based) và cây nhị phân hoàn chỉnh.
-                  Dùng tab "Dạng mảng" để lý giải cách Heap lưu trong bộ nhớ, và tab "Dạng cây" để trình bày trực quan cha - con.
+                  Đây là tab <strong>tổng hợp</strong> để bạn thuyết trình toàn bộ luồng xử lý của Max-Heap trong phòng cấp cứu:
+                  từ cách dữ liệu lưu trên mảng, cây nhị phân hoàn chỉnh cho đến từng bước sift-up / sift-down và ý nghĩa lý thuyết.
                 </p>
                 <p>
-                  Tab "Các bước" cho thấy log sift-up hoặc sift-down tương ứng. Bạn có thể chuyển giữa các tab này trong khi thao tác để nhấn mạnh từng khía cạnh.
+                  Bạn có thể lần lượt:
+                  (1) nhìn vào <strong>dạng mảng</strong> để giải thích Heap cài trên array,
+                  (2) chuyển sang <strong>dạng cây</strong> để nói về cha–con và ưu tiên,
+                  (3) dùng <strong>các bước thuật toán</strong> để mô tả insert / extract-max,
+                  và (4) chốt lại bằng phần <strong>lý thuyết</strong> ngay trong cùng một màn hình.
                 </p>
               </div>
             </article>
-          </section>
 
-          <section id="tab-heap-array" class="tab-section hidden">
-            <article class="card">
-              <div class="card-header">
-                <h2>Minh hoạ dạng mảng</h2>
-                <p>Hiển thị cấu trúc Heap theo dạng array (0-based index).</p>
-              </div>
-              <div id="arrayView" class="array-view"></div>
-            </article>
-          </section>
+            <section class="viz-grid">
+              <article class="card">
+                <div class="card-header">
+                  <h2>Minh hoạ dạng mảng</h2>
+                  <p>Heap lưu trong bộ nhớ như một mảng (array) 0-based.</p>
+                </div>
+                <div id="arrayView" class="array-view"></div>
+              </article>
 
-          <section id="tab-heap-tree" class="tab-section hidden">
-            <article class="card">
-              <div class="card-header">
-                <h2>Minh hoạ dạng cây</h2>
-                <p>Phân tầng cha - con; step highlight thể hiện node đang xét.</p>
-              </div>
-              <div id="treeView" class="tree-view"></div>
-            </article>
-          </section>
+              <article class="card">
+                <div class="card-header">
+                  <h2>Minh hoạ dạng cây</h2>
+                  <p>Cùng dữ liệu nhưng hiển thị như cây nhị phân hoàn chỉnh cha–con.</p>
+                </div>
+                <div id="treeView" class="tree-view"></div>
+              </article>
 
-          <section id="tab-heap-steps" class="tab-section hidden">
-            <article class="card steps-card">
+              <article class="card steps-card">
+                <div class="card-header">
+                  <h2>Các bước thuật toán</h2>
+                  <p>Timeline từng bước sift-up / sift-down của thao tác gần nhất.</p>
+                </div>
+                <ol id="stepsList" class="steps-list"></ol>
+              </article>
+            </section>
+
+            <article class="card theory-card">
               <div class="card-header">
-                <h2>Các bước thuật toán</h2>
-                <p>Giải thích sift-up / sift-down của thao tác gần nhất.</p>
+                <h2>Tóm tắt lý thuyết Heap (dành cho thuyết trình)</h2>
               </div>
-              <ol id="stepsList" class="steps-list"></ol>
+              <div class="theory-content">
+                <p>
+                  <strong>Heap</strong> là một cây nhị phân gần như đầy đủ, thường được cài đặt bằng một <strong>mảng 1 chiều</strong>.
+                  Trong <strong>Max-Heap</strong>, mỗi node luôn có giá trị <em>không nhỏ hơn</em> hai node con của nó,
+                  nên phần tử lớn nhất (bệnh nhân nguy kịch nhất) luôn nằm ở gốc.
+                </p>
+                <p>
+                  Nhờ cách lưu trên mảng, ta không cần con trỏ phức tạp:
+                  vị trí cha và con chỉ cần công thức <code>parent = (i - 1) // 2</code>,
+                  <code>left = 2 * i + 1</code>, <code>right = 2 * i + 2</code>.
+                  Mỗi lần thêm hoặc xoá, ta chỉ việc <strong>đổi chỗ dọc theo chiều cao cây</strong> (sift-up / sift-down),
+                  vì vậy chi phí luôn là <strong>O(log n)</strong>.
+                </p>
+                <p>
+                  Trong bài toán phòng cấp cứu, Heap đóng vai trò là <strong>Priority Queue</strong>:
+                  bệnh nhân có mức độ nguy kịch cao hơn (Level gần 10) sẽ nổi lên gốc và được xử lý trước.
+                  Nếu cùng mức độ, người đến sớm hơn vẫn đi trước nhờ tiêu chí so sánh trong giải thuật.
+                  Điều này giúp hệ thống <em>vừa công bằng, vừa hiệu quả</em> khi số lượng bệnh nhân lớn.
+                </p>
+              </div>
             </article>
           </section>
 
@@ -211,25 +233,152 @@
             </article>
           </section>
 
-          <section id="tab-theory" class="tab-section hidden">
+          <section id="tab-algorithm" class="tab-section hidden">
             <article class="card theory-card">
               <div class="card-header">
-                <h2>Giới thiệu thuật toán Heap</h2>
+                <h2>Giải thuật Max-Heap cho xếp lịch cấp cứu</h2>
               </div>
               <div class="theory-content">
+                <h3>1. Cấu trúc dữ liệu</h3>
                 <p>
-                  Heap (đặc biệt là Max-Heap) là cấu trúc cây nhị phân hoàn chỉnh trong đó mỗi node luôn lớn hơn hoặc bằng các node con.
-                  Nhờ tính chất này, thao tác lấy phần tử có priority cao nhất chỉ cần O(1), còn thêm / loại bỏ mất O(log n) nhờ sift-up hoặc sift-down.
+                  Ta dùng <strong>Max-Heap</strong> cài đặt trên <strong>mảng</strong>.
+                  Mỗi phần tử là một bệnh nhân với các trường:
+                  <code>(code, name, admitted_at, severity)</code>.
                 </p>
                 <p>
-                  Trong bối cảnh cấp cứu, bệnh nhân có mức độ nguy kịch cao (Level gần 10) phải được phục vụ trước.
-                  Nếu mức độ bằng nhau, người đến sớm hơn được ưu tiên hơn. Vì vậy Heap phù hợp để mô phỏng phòng cấp cứu.
+                  Heap được index từ 0. Với node tại vị trí <code>i</code>:
                 </p>
                 <ul>
-                  <li>Insert: thêm node ở cuối mảng rồi sift-up.</li>
-                  <li>Extract-max: lấy node gốc, đưa node cuối lên gốc và sift-down.</li>
-                  <li>Priority queue: bảng bên phải luôn hiển thị thứ tự xử lý chính xác.</li>
+                  <li>Cha: <code>parent = (i - 1) // 2</code> (nếu i &gt; 0).</li>
+                  <li>Con trái: <code>left = 2 * i + 1</code>.</li>
+                  <li>Con phải: <code>right = 2 * i + 2</code>.</li>
                 </ul>
+
+                <h3>2. Quy tắc so sánh độ ưu tiên</h3>
+                <p>Một bệnh nhân A được xem là <strong>ưu tiên hơn</strong> B nếu:</p>
+                <ol>
+                  <li><code>A.severity &gt; B.severity</code> &rarr; mức độ nguy kịch cao hơn.</li>
+                  <li>Nếu severity bằng nhau: <code>A.admitted_at</code> sớm hơn <code>B.admitted_at</code>.</li>
+                  <li>Nếu vẫn bằng nhau: dùng thứ tự đến trong hệ thống (biến đếm <code>order</code>).</li>
+                </ol>
+
+                <h3>3. Thuật toán Insert (thêm bệnh nhân)</h3>
+                <p><strong>Input:</strong> bệnh nhân mới P cần đưa vào Heap có n phần tử.</p>
+                <p><strong>Các bước:</strong></p>
+                <ol>
+                  <li>Bước 1: Đặt P vào cuối mảng: <code>heap[n] = P</code>.</li>
+                  <li>Bước 2: Đặt <code>i = n</code> (vị trí P vừa chèn).</li>
+                  <li>
+                    Bước 3: Trong khi <code>i &gt; 0</code>:
+                    <ul>
+                      <li>Tính <code>parent = (i - 1) // 2</code>.</li>
+                      <li>Nếu <code>heap[i]</code> ưu tiên hơn <code>heap[parent]</code>:
+                        <ul>
+                          <li>Hoán đổi <code>heap[i]</code> và <code>heap[parent]</code> (sift-up).</li>
+                          <li>Cập nhật <code>i = parent</code> và lặp lại.</li>
+                        </ul>
+                      </li>
+                      <li>Ngược lại: dừng vòng lặp (Heap đã thoả mãn thuộc tính Max-Heap).</li>
+                    </ul>
+                  </li>
+                </ol>
+                <p><strong>Độ phức tạp:</strong> O(log n) vì mỗi lần hoán đổi đi lên 1 tầng của cây.</p>
+
+                <h3>4. Thuật toán Extract-Max (xử lý bệnh nhân khẩn cấp nhất)</h3>
+                <p><strong>Input:</strong> Heap có n phần tử, n &gt; 0.</p>
+                <p><strong>Các bước:</strong></p>
+                <ol>
+                  <li>Bước 1: Lưu lại phần tử gốc <code>max = heap[0]</code> &rarr; đây là bệnh nhân ưu tiên nhất.</li>
+                  <li>Bước 2: Lấy phần tử cuối mảng <code>last = heap[n-1]</code>, giảm kích thước n.</li>
+                  <li>Bước 3: Nếu Heap chưa rỗng, đưa <code>last</code> lên gốc: <code>heap[0] = last</code>.</li>
+                  <li>
+                    Bước 4: Thực hiện <strong>sift-down</strong>:
+                    <ul>
+                      <li>Đặt <code>i = 0</code>.</li>
+                      <li>Trong khi còn con:
+                        <ul>
+                          <li>Tính <code>left = 2 * i + 1</code>, <code>right = 2 * i + 2</code>.</li>
+                          <li>Chọn vị trí <code>highest</code> là node ưu tiên nhất giữa <code>i</code>, <code>left</code>, <code>right</code>.</li>
+                          <li>Nếu <code>highest != i</code>:
+                            <ul>
+                              <li>Hoán đổi <code>heap[i]</code> và <code>heap[highest]</code>.</li>
+                              <li>Đặt <code>i = highest</code> và tiếp tục.</li>
+                            </ul>
+                          </li>
+                          <li>Ngược lại: dừng, Heap đã ổn định.</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>Bước 5: Trả về <code>max</code> (bệnh nhân vừa được xử lý).</li>
+                </ol>
+                <p><strong>Độ phức tạp:</strong> O(log n).</p>
+
+                <h3>6. Ví dụ minh hoạ trực quan</h3>
+                <p>Giả sử ta có 5 bệnh nhân với (Mã, Level):</p>
+                <pre>
+Array (index, code, level):
+[0] BN01 (10)
+[1] BN02 (7)
+[2] BN03 (6)
+[3] BN04 (4)
+[4] BN05 (2)
+
+Cây Heap tương ứng:
+
+          BN01(10)
+         /        \
+     BN02(7)     BN03(6)
+     /     \
+ BN04(4)  BN05(2)
+                </pre>
+                <p>
+                  Khi chèn thêm BN06(Level 9), ban đầu node nằm ở cuối mảng, sau đó sift-up:
+                  BN06 so với cha, nếu Level lớn hơn thì đổi chỗ cho tới khi đứng đúng vị trí trong cây.
+                </p>
+
+                <h3>7. Đoạn mã Heap cốt lõi trong ứng dụng</h3>
+                <p>Trong file <code>services/heap.py</code>, phần so sánh ưu tiên và sift-up được cài đặt như sau:</p>
+                <pre>
+def _higher_priority(self, child: HeapNode, parent: HeapNode) -> bool:
+    # 1. Ưu tiên level cao hơn
+    if child.patient.severity != parent.patient.severity:
+        return child.patient.severity &gt; parent.patient.severity
+    # 2. Nếu level bằng nhau, ai nhập viện sớm hơn thì ưu tiên hơn
+    if child.admitted_ts != parent.admitted_ts:
+        return child.admitted_ts &lt; parent.admitted_ts
+    # 3. Nếu vẫn bằng nhau, dùng order để ổn định
+    return child.order &lt; parent.order
+
+def _sift_up(self, index: int) -> None:
+    while index &gt; 0:
+        parent = (index - 1) // 2
+        child_node = self._nodes[index]
+        parent_node = self._nodes[parent]
+        if self._higher_priority(child_node, parent_node):
+            # hoán đổi child lên trên
+            self._nodes[index], self._nodes[parent] = self._nodes[parent], self._nodes[index]
+            index = parent
+        else:
+            break
+                </pre>
+                <p>
+                  Khi trình bày, bạn có thể chỉ vào đoạn code này để giải thích:
+                  “đây là chỗ quyết định bệnh nhân nào được ưu tiên hơn trong Heap”
+                  và kết nối lại với hình minh hoạ cây ở trên.
+                </p>
+
+                <h3>5. Liên hệ với giao diện demo</h3>
+                <ul>
+                  <li>Tab <strong>“Thêm bệnh nhân”</strong> thực hiện Insert + minh hoạ sift-up.</li>
+                  <li>Tab <strong>“Danh sách ưu tiên”</strong> luôn hiển thị kết quả của Priority Queue.</li>
+                  <li>Tab <strong>“Dạng mảng”</strong> cho thấy vị trí index sau mỗi bước hoán đổi.</li>
+                  <li>Tab <strong>“Dạng cây”</strong> + <strong>“Các bước”</strong> trực quan hoá quá trình sift-up / sift-down.</li>
+                </ul>
+                <p>
+                  Khi thuyết trình, bạn có thể đứng ở tab này để đọc lại ý chính, sau đó chuyển sang các tab minh hoạ khác
+                  để cho thấy dữ liệu thay đổi đúng theo từng bước giải thuật.
+                </p>
               </div>
             </article>
           </section>

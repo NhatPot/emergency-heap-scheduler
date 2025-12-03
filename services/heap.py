@@ -58,6 +58,106 @@ class Patient:
         return payload
 
 
+class EmergencyHeapSimple:
+    """
+    
+
+    - Ưu tiên 1: severity lớn hơn.
+    - Ưu tiên 2: thời điểm nhập viện sớm hơn.
+    - Ưu tiên 3: vào hệ thống sớm hơn (order nhỏ hơn).
+
+    
+    """
+
+    def __init__(self) -> None:
+        # mỗi phần tử là tuple (patient, admitted_ts, order)
+        self._nodes: List[tuple[Patient, float, int]] = []
+        self._order_counter = 0
+
+    # ---- Hàm so sánh độ ưu tiên giữa 2 node ----
+    def _higher_priority(self, a: tuple[Patient, float, int], b: tuple[Patient, float, int]) -> bool:
+        pa, ta, oa = a
+        pb, tb, ob = b
+
+        # 1) severity lớn hơn -> ưu tiên hơn
+        if pa.severity != pb.severity:
+            return pa.severity > pb.severity
+
+        # 2) cùng severity: ai nhập viện sớm hơn (timestamp nhỏ hơn) -> ưu tiên
+        if ta != tb:
+            return ta < tb
+
+        # 3) cùng thời điểm nhập viện: ai vào hệ thống trước (order nhỏ hơn) -> ưu tiên
+        return oa < ob
+
+    # ---- Sift-up: đẩy node mới lên trên ----
+    def _sift_up(self, index: int) -> None:
+        while index > 0:
+            parent = (index - 1) // 2
+            if self._higher_priority(self._nodes[index], self._nodes[parent]):
+                self._nodes[index], self._nodes[parent] = self._nodes[parent], self._nodes[index]
+                index = parent
+            else:
+                break
+
+    # ---- Sift-down: đẩy node xuống dưới ----
+    def _sift_down(self, index: int) -> None:
+        size = len(self._nodes)
+        while True:
+            left = 2 * index + 1
+            right = 2 * index + 2
+            highest = index
+
+            if left < size and self._higher_priority(self._nodes[left], self._nodes[highest]):
+                highest = left
+            if right < size and self._higher_priority(self._nodes[right], self._nodes[highest]):
+                highest = right
+
+            if highest != index:
+                self._nodes[index], self._nodes[highest] = self._nodes[highest], self._nodes[index]
+                index = highest
+            else:
+                break
+
+    # ---- Thêm bệnh nhân ----
+    def add_patient(self, code: str, name: str, admitted_at: str, severity: int) -> None:
+        """
+        B1: Tạo đối tượng Patient.
+        B2: Đưa node mới vào cuối mảng.
+        B3: Gọi _sift_up để đưa node về đúng vị trí trong Max-Heap.
+        """
+        patient = Patient(code=code, name=name, admitted_at=admitted_at, severity=severity)
+        admitted_ts = parse_timestamp(admitted_at)
+        self._order_counter += 1
+        node = (patient, admitted_ts, self._order_counter)
+
+        self._nodes.append(node)
+        self._sift_up(len(self._nodes) - 1)
+
+    # ---- Lấy bệnh nhân ưu tiên nhất ----
+    def extract_next(self) -> Optional[Patient]:
+        """
+        B1: Lấy node gốc (index 0).
+        B2: Đưa node cuối cùng lên gốc.
+        B3: Gọi _sift_down để khôi phục tính chất heap.
+        """
+        if not self._nodes:
+            return None
+
+        root_patient, _, _ = self._nodes[0]
+        last = self._nodes.pop()
+        if self._nodes:
+            self._nodes[0] = last
+            self._sift_down(0)
+
+        return root_patient
+
+    # ---- Hàm phụ để minh hoạ trên lớp ----
+    def as_array(self) -> List[str]:
+        """Trả về danh sách mã bệnh nhân theo thứ tự mảng heap."""
+        return [node[0].code for node in self._nodes]
+
+
 @dataclass
 class HeapNode:
     patient: Patient

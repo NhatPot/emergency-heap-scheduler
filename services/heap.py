@@ -399,7 +399,15 @@ class EmergencyHeap:
     def last_steps(self) -> List[Dict[str, Any]]:
         return self._last_steps
 
-    def generate_demo(self, count: int = 5) -> None:
+    def generate_demo(self, count: int = 5, severity: str = "random") -> None:
+        """
+        Tạo bệnh nhân demo.
+        
+        Args:
+            count: Số lượng bệnh nhân cần tạo
+            severity: "random" hoặc số từ 1-10. Nếu "random" thì mỗi bệnh nhân có level ngẫu nhiên,
+                     nếu là số thì tất cả bệnh nhân có cùng level đó.
+        """
         names = [
             "Nguyễn An",
             "Trần Bình",
@@ -411,15 +419,27 @@ class EmergencyHeap:
             "Lý Khang",
             "Đỗ Lan",
         ]
+        # Xác định severity cho từng bệnh nhân
+        if severity == "random":
+            severity_func = lambda: random.randint(1, 10)
+        else:
+            try:
+                fixed_severity = int(severity)
+                if not (1 <= fixed_severity <= 10):
+                    fixed_severity = random.randint(1, 10)
+                severity_func = lambda: fixed_severity
+            except (ValueError, TypeError):
+                severity_func = lambda: random.randint(1, 10)
+        
         for _ in range(count):
             code = f"BN{len(self._nodes) + random.randint(1, 999):03d}"
             name = random.choice(names)
-            severity = random.randint(1, 10)
+            patient_severity = severity_func()
             admitted_time = (datetime.now() - timedelta(minutes=random.randint(0, 120))).strftime(
                 "%Y-%m-%dT%H:%M:%S"
             )
             try:
-                self.add_patient(code, name, admitted_time, severity)
+                self.add_patient(code, name, admitted_time, patient_severity)
             except ValueError:
                 continue
 

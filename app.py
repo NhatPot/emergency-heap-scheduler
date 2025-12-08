@@ -91,10 +91,23 @@ def patient_detail(code: str):
 def demo_patients():
     payload = request.get_json(silent=True) or {}
     count = int(payload.get("count", 5))
-    scheduler.generate_demo(count)
+    severity = payload.get("severity", "random")
+    
+    # Validate severity
+    if severity != "random":
+        try:
+            severity_int = int(severity)
+            if not (1 <= severity_int <= 10):
+                severity = "random"
+        except (ValueError, TypeError):
+            severity = "random"
+    
+    scheduler.generate_demo(count=count, severity=severity)
+    
+    severity_msg = f"Level {severity}" if severity != "random" else "ngẫu nhiên"
     return jsonify(
         {
-            "message": f"Đã sinh {count} bệnh nhân demo.",
+            "message": f"Đã sinh {count} bệnh nhân demo (mức độ {severity_msg}).",
             "state": build_state(),
         }
     )

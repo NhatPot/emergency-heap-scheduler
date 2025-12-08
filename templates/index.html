@@ -150,47 +150,109 @@
           <section id="tab-heap" class="tab-section hidden">
             <article class="card">
               <div class="card-header">
-                <h2>Tổng hợp minh hoạ Heap trong bài toán cấp cứu</h2>
-              </div>
-              <div class="theory-content">
-                <p>
-                  Đây là tab <strong>tổng hợp</strong> để bạn thuyết trình toàn bộ luồng xử lý của Max-Heap trong phòng cấp cứu:
-                  từ cách dữ liệu lưu trên mảng, cây nhị phân hoàn chỉnh cho đến từng bước sift-up / sift-down và ý nghĩa lý thuyết.
-                </p>
-                <p>
-                  Bạn có thể lần lượt:
-                  (1) nhìn vào <strong>dạng mảng</strong> để giải thích Heap cài trên array,
-                  (2) chuyển sang <strong>dạng cây</strong> để nói về cha–con và ưu tiên,
-                  (3) dùng <strong>các bước thuật toán</strong> để mô tả insert / extract-max,
-                  và (4) chốt lại bằng phần <strong>lý thuyết</strong> ngay trong cùng một màn hình.
-                </p>
+                <div>
+                  <h2>Tổng hợp minh hoạ Heap trong bài toán cấp cứu</h2>
+                  <p>
+                    Đây là tab <strong>tổng hợp</strong> để bạn thuyết trình toàn bộ luồng xử lý của Max-Heap trong phòng cấp cứu:
+                    từ cách dữ liệu lưu trên mảng, cây nhị phân hoàn chỉnh cho đến từng bước sift-up / sift-down và ý nghĩa lý thuyết.
+                  </p>
+                </div>
+                <div class="heap-demo-controls">
+                  <label class="demo-count-select">
+                    <span>Số lượng:</span>
+                    <select id="heapDemoCount">
+                      <option value="1">1</option>
+                      <option value="5" selected>5</option>
+                      <option value="10">10</option>
+                      <option value="15">15</option>
+                      <option value="20">20</option>
+                    </select>
+                  </label>
+                  <label class="demo-severity-select">
+                    <span>Mức độ nguy kịch:</span>
+                    <select id="heapDemoSeverity">
+                      <option value="random" selected>Ngẫu nhiên (1–10)</option>
+                      <option value="10">Level 10</option>
+                      <option value="9">Level 9</option>
+                      <option value="8">Level 8</option>
+                      <option value="7">Level 7</option>
+                      <option value="6">Level 6</option>
+                      <option value="5">Level 5</option>
+                      <option value="4">Level 4</option>
+                      <option value="3">Level 3</option>
+                      <option value="2">Level 2</option>
+                      <option value="1">Level 1</option>
+                    </select>
+                  </label>
+                  <button id="heapDemoBtn" class="primary">🎲 Tự tạo bệnh nhân demo</button>
+                </div>
               </div>
             </article>
 
-            <section class="viz-grid">
-              <article class="card">
+            <!-- Layout 2 cột: Tree (trái) | Array + Steps (phải) -->
+            <section class="heap-viz-row">
+              <!-- Cột trái: Tree (65-70%) -->
+              <article class="card heap-tree-card">
                 <div class="card-header">
-                  <h2>Minh hoạ dạng mảng</h2>
-                  <p>Heap lưu trong bộ nhớ như một mảng (array) 0-based.</p>
+                  <h2>Minh hoạ Heap dạng cây (Max-Heap)</h2>
+                  <p>Heap là cây nhị phân hoàn chỉnh, cha luôn có ưu tiên cao hơn con.</p>
                 </div>
-                <div id="arrayView" class="array-view"></div>
+                <!-- Animation Controls -->
+                <div class="animation-controls">
+                  <div class="animation-buttons">
+                    <button id="animPlayBtn" class="anim-btn" title="Play">
+                      <span class="anim-icon">▶</span>
+                    </button>
+                    <button id="animPauseBtn" class="anim-btn" title="Pause" style="display: none;">
+                      <span class="anim-icon">⏸</span>
+                    </button>
+                    <button id="animStepForwardBtn" class="anim-btn" title="Step Forward">
+                      <span class="anim-icon">⏭</span>
+                    </button>
+                    <button id="animStepBackBtn" class="anim-btn" title="Step Backward">
+                      <span class="anim-icon">⏮</span>
+                    </button>
+                    <button id="animResetBtn" class="anim-btn" title="Reset">
+                      <span class="anim-icon">⏹</span>
+                    </button>
+                  </div>
+                  <div class="animation-speed">
+                    <label>
+                      <span>Tốc độ:</span>
+                      <input type="range" id="animSpeedSlider" min="0.25" max="2" step="0.25" value="1">
+                      <span id="animSpeedValue">1x</span>
+                    </label>
+                  </div>
+                  <div class="animation-progress">
+                    <span id="animProgress">Bước 0 / 0</span>
+                  </div>
+                </div>
+                <div id="heap-tree-container" class="heap-tree-container">
+                  <div id="treeView" class="tree-view"></div>
+                </div>
+                <div class="heap-legend" id="heapLegend"></div>
               </article>
 
-              <article class="card">
-                <div class="card-header">
-                  <h2>Minh hoạ dạng cây</h2>
-                  <p>Cùng dữ liệu nhưng hiển thị như cây nhị phân hoàn chỉnh cha–con.</p>
-                </div>
-                <div id="treeView" class="tree-view"></div>
-              </article>
+              <!-- Cột phải: Array + Steps (30-35%) -->
+              <div class="heap-right-column">
+                <article class="card heap-array-card">
+                  <div class="card-header">
+                    <h2>Minh hoạ dạng mảng (array)</h2>
+                    <p>Heap lưu trong bộ nhớ như một mảng (array) 0-based.</p>
+                  </div>
+                  <div id="arrayView" class="array-view"></div>
+                </article>
 
-              <article class="card steps-card">
-                <div class="card-header">
-                  <h2>Các bước thuật toán</h2>
-                  <p>Timeline từng bước sift-up / sift-down của thao tác gần nhất.</p>
-                </div>
-                <ol id="stepsList" class="steps-list"></ol>
-              </article>
+                <article class="card steps-card">
+                  <div class="card-header">
+                    <h2>Các bước thuật toán</h2>
+                    <p>Timeline từng bước sift-up / sift-down của thao tác gần nhất.</p>
+                  </div>
+                  <div id="heap-steps-container" class="steps-container">
+                    <ol id="stepsList" class="steps-list"></ol>
+                  </div>
+                </article>
+              </div>
             </section>
 
             <article class="card theory-card">

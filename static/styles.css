@@ -404,28 +404,35 @@ tbody tr:hover {
   color: #34d399;
 }
 
+/* Spacing between header card and main heap cards */
+#tab-heap .heap-header-card {
+  margin-bottom: 2rem; /* Khoảng cách rõ ràng giữa card tiêu đề và hàng card phía dưới */
+}
+
 /* Heap visualization layout - 2 cột: Tree (65-70%) | Array + Steps (30-35%) */
 .heap-viz-row {
   display: grid;
   grid-template-columns: 68% 32%;
-  gap: 1.5rem;
+  gap: 2.5rem; /* Tăng khoảng cách giữa 2 cột */
   align-items: start;
 }
 
 .heap-tree-card {
   min-height: 400px;
+  margin-bottom: 0; /* Đảm bảo không có margin-bottom thừa */
 }
 
 .heap-right-column {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem; /* Tăng khoảng cách giữa Array và Steps */
   height: 100%;
 }
 
 .heap-array-card {
   min-height: 200px;
   flex-shrink: 0;
+  margin-bottom: 0; /* Đảm bảo không có margin-bottom thừa */
 }
 
 .steps-card {
@@ -433,6 +440,89 @@ tbody tr:hover {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  margin-bottom: 0; /* Đảm bảo không có margin-bottom thừa */
+}
+
+/* Heap visualization layout & typography tweaks - chỉ áp dụng cho tab heap */
+#tab-heap {
+  /* Giảm font-size cho tiêu đề card */
+}
+
+#tab-heap .card-header h2 {
+  font-size: 1.05rem; /* Giảm từ 1.2rem xuống ~12% */
+  line-height: 1.3;
+}
+
+#tab-heap .card-header p {
+  font-size: 0.85rem; /* Giảm từ 0.95rem xuống ~10% */
+  line-height: 1.4;
+}
+
+/* Giảm font-size cho nội dung trong node cây */
+#tab-heap .node-code {
+  font-size: 0.88rem; /* Giảm từ 1rem xuống ~12% */
+}
+
+#tab-heap .node-name {
+  font-size: 0.72rem; /* Giảm từ 0.8rem xuống ~10% */
+}
+
+#tab-heap .node-index {
+  font-size: 0.65rem; /* Giảm từ 0.7rem xuống ~7% */
+}
+
+/* Giảm font-size cho mảng */
+#tab-heap .heap-array-item {
+  font-size: 0.8rem; /* Giảm từ 0.9rem xuống ~11% */
+  padding: 0.6rem 0.9rem; /* Giảm padding nhẹ để gọn hơn */
+}
+
+#tab-heap .array-index {
+  font-size: 0.75rem; /* Giảm từ 0.85rem xuống ~12% */
+}
+
+/* Giảm font-size cho steps */
+#tab-heap .step-item {
+  font-size: 0.85rem; /* Giảm nhẹ để dễ đọc */
+  line-height: 1.5;
+  padding: 0.75rem 0.9rem; /* Giảm padding nhẹ */
+}
+
+#tab-heap .step-item strong {
+  font-size: 0.9rem; /* Giữ tiêu đề step hơi lớn hơn */
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+#tab-heap .step-item p {
+  font-size: 0.8rem; /* Giảm description */
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Giảm font-size cho badge trong node */
+#tab-heap .badge {
+  font-size: 0.75rem; /* Giảm từ mặc định */
+  padding: 0.15rem 0.5rem;
+}
+
+/* Giảm font-size cho legend */
+#tab-heap .heap-legend {
+  font-size: 0.8rem;
+}
+
+#tab-heap .legend-badge {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.7rem;
+}
+
+/* Giảm font-size cho animation controls */
+#tab-heap .animation-speed label {
+  font-size: 0.85rem;
+}
+
+#tab-heap .animation-progress {
+  font-size: 0.8rem;
 }
 
 .steps-container {

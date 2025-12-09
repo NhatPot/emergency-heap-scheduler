@@ -31,6 +31,7 @@ const elements = {
   heapDemoBtn: document.getElementById("heapDemoBtn"),
   heapDemoCount: document.getElementById("heapDemoCount"),
   heapDemoSeverity: document.getElementById("heapDemoSeverity"),
+  heapProcessTopBtn: document.getElementById("heapProcessTopBtn"),
 };
 
 const tabButtons = document.querySelectorAll("[data-tab]");
@@ -1052,6 +1053,27 @@ const handleHeapDemo = async () => {
   }
 };
 
+// Handle process top (extract-max) from tab heap
+const handleHeapProcessTop = async () => {
+  try {
+    pauseAnimation();
+    const data = await request("/api/patients/process", { method: "POST" });
+    showToast(data.message || "Đã xử lý bệnh nhân khẩn cấp nhất.");
+    updateState(data.state);
+    // Nếu heap rỗng thì không chạy animation
+    if (data.state && data.state.heapArray && data.state.heapArray.length === 0) {
+      return;
+    }
+    // Initialize animation và auto play
+    setTimeout(() => {
+      initAnimation();
+      startAnimation();
+    }, 400);
+  } catch (error) {
+    showToast(error.message || "Đã có lỗi khi xử lý khẩn cấp nhất.");
+  }
+};
+
 // Event listeners cho animation controls
 if (elements.animPlayBtn) {
   elements.animPlayBtn.addEventListener("click", startAnimation);
@@ -1089,6 +1111,10 @@ if (elements.animSpeedSlider) {
 
 if (elements.heapDemoBtn) {
   elements.heapDemoBtn.addEventListener("click", handleHeapDemo);
+}
+
+if (elements.heapProcessTopBtn) {
+  elements.heapProcessTopBtn.addEventListener("click", handleHeapProcessTop);
 }
 
 // Update initAnimation khi state thay đổi - override sau khi updateState được định nghĩa

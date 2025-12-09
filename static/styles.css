@@ -594,6 +594,28 @@ tbody tr:hover {
   outline: none;
 }
 
+/* Nút xử lý khẩn cấp nhất */
+.btn-process-top {
+  background: linear-gradient(135deg, #ef4444, #8b5cf6);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 0.8rem 1.4rem;
+  font-weight: 700;
+  box-shadow: 0 12px 24px rgba(239, 68, 68, 0.25);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.2s ease;
+}
+
+.btn-process-top:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 28px rgba(139, 92, 246, 0.25);
+}
+
+.btn-process-top:active {
+  transform: translateY(0);
+}
+
 /* Animation Controls */
 .animation-controls {
   display: flex;
